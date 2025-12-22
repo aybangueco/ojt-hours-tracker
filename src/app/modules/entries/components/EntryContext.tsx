@@ -1,27 +1,35 @@
 "use client";
 
-import { TimeEntry } from "@/utils/types";
-import { createContext, ReactNode, useState } from "react";
+import { createContext, type ReactNode, useContext, useState } from "react";
+import type { TimeEntry } from "@/utils/types";
 
 type EntryContextType = {
-  timeEntries: TimeEntry[];
-  setTimeEntries: React.Dispatch<React.SetStateAction<TimeEntry[]>>;
+	timeEntries: TimeEntry[];
+	setTimeEntries: React.Dispatch<React.SetStateAction<TimeEntry[]>>;
 };
 
-export const EntryContext = createContext<EntryContextType | undefined>(
-  undefined
-);
+const EntryContext = createContext<EntryContextType | null>(null);
 
 export default function EntryContextProvider({
-  children,
+	children,
 }: {
-  children: ReactNode;
+	children: ReactNode;
 }) {
-  const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
+	const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
 
-  return (
-    <EntryContext.Provider value={{ timeEntries, setTimeEntries }}>
-      {children}
-    </EntryContext.Provider>
-  );
+	return (
+		<EntryContext.Provider value={{ timeEntries, setTimeEntries }}>
+			{children}
+		</EntryContext.Provider>
+	);
+}
+
+export function useEntryContext() {
+	const ctx = useContext(EntryContext);
+
+	if (!ctx) {
+		throw new Error("useEntryContext must be used inside EntryContextProvider");
+	}
+
+	return ctx;
 }

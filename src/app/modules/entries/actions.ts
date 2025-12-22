@@ -1,64 +1,64 @@
 "use server";
 
+import type { Entries } from "@/generated/client";
 import { createEntry, deleteEntry, getEntriesByUser, updateEntry } from ".";
-import { Entries } from "@/generated/client";
 
 export async function actionGetEntries(userID: string): Promise<{
-  ok: boolean;
-  data: Entries[] | null;
+	ok: boolean;
+	data: Entries[] | null;
 }> {
-  try {
-    const entries = await getEntriesByUser(userID);
+	try {
+		const entries = await getEntriesByUser(userID);
 
-    return { ok: true, data: entries };
-  } catch (error) {
-    console.log(error);
-    return { ok: false, data: null };
-  }
+		return { ok: true, data: entries };
+	} catch (error) {
+		console.log(error);
+		return { ok: false, data: null };
+	}
 }
 
 export async function actionCreateEntry(
-  userID: string,
-  data: Omit<Entries, "id" | "created_at" | "created_by">
+	userID: string,
+	data: Omit<Entries, "id" | "created_at" | "created_by">,
 ): Promise<{ ok: boolean; data: Entries | null }> {
-  try {
-    const entry = await createEntry({
-      ...data,
-      created_by: userID,
-    });
+	try {
+		const entry = await createEntry({
+			...data,
+			created_by: userID,
+		});
 
-    return { ok: true, data: entry };
-  } catch (error) {
-    console.log(error);
-    return { ok: false, data: null };
-  }
+		return { ok: true, data: entry };
+	} catch (error) {
+		console.log(error);
+		return { ok: false, data: null };
+	}
 }
 
 export async function actionUpdateEntry(
-  entryID: number,
-  userID: string,
-  data: Omit<Entries, "id" | "created_at" | "created_by">
+	entryID: number,
+	userID: string,
+	data: Omit<Entries, "id" | "created_at" | "created_by">,
 ): Promise<{ ok: boolean; data: Entries | null }> {
-  try {
-    const entry = await updateEntry(entryID, userID, data);
+	try {
+		const entry = await updateEntry(entryID, userID, data);
 
-    return { ok: true, data: entry };
-  } catch (error) {
-    console.log(error);
-    return { ok: false, data: null };
-  }
+		return { ok: true, data: entry };
+	} catch (error) {
+		console.log(error);
+		return { ok: false, data: null };
+	}
 }
 
 export async function actionDeleteEntry(
-  entryID: number,
-  userID: string
+	entryID: number,
+	userID: string,
 ): Promise<{ ok: boolean }> {
-  try {
-    await deleteEntry(entryID, userID);
+	try {
+		await deleteEntry(entryID, userID);
 
-    return { ok: true };
-  } catch (error) {
-    console.log(error);
-    return { ok: false };
-  }
+		return { ok: true };
+	} catch (error) {
+		console.log(error);
+		return { ok: false };
+	}
 }
